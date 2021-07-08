@@ -33,23 +33,28 @@ app.get('/api/persons',(request,response) =>{
 })
 
 app.get('/api/persons/:id',(request,response) =>{
-    
     const id=Number(request.params.id)
     const person=persons.find(person=>person.id===id)
-    console.log(person);
+
     person?response.json(person)
           :response.status(404).end()
 })
 
+app.delete('/api/persons/:id',(request,response)=>{
+  const id=Number(request.params.id)
+    persons=persons.filter(person=>person.id!==id)
+
+    response.status(204).end()
+})
+
 app.get('/info',(request,response) =>{
     const message = `<div>Phonebook has info for ${persons.length} people</div>
-                    <div>${new Date()}</div>`
-                    
+                    <div>${new Date()}</div>`      
+
     response.send(message)
 })
 
 const PORT=3001
 app.listen(PORT,()=>{
     console.log(`Server running on port ${PORT}`)
-
 })
