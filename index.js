@@ -3,9 +3,12 @@ const morgan = require('morgan')
 
 const app = express()
 
+morgan.token('POST-data',(req,res)=>{
+  return JSON.stringify(req.body)
+})
 
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :POST-data'))
 app.use(express.json())
-app.use(morgan('tiny'))
 
 let persons = [
     { 
