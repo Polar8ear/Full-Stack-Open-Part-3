@@ -1,0 +1,33 @@
+{
+  "name": "phonebook-backend",
+  "version": "1.0.0",
+  "description": "An express backend server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Polar8ear/Full-Stack-Open-Part-3.git"
+  },
+  "keywords": [
+    "backend",
+    "nodejs",
+    "node",
+    "express"
+  ],
+  "author": "Chuo Ngiu Bing",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Polar8ear/Full-Stack-Open-Part-3/issues"
+  },
+  "homepage": "https://github.com/Polar8ear/Full-Stack-Open-Part-3#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.9"
+  }
+}
