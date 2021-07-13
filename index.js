@@ -22,7 +22,6 @@ app.get('/api/persons',(request,response) =>{
 
 app.get('/api/persons/:id',(request,response,next) =>{
     const id=request.params.id
-    console.log(request.params);
     Person.findById(id).then(person=>{person
                                       ?response.json(person)
                                       :response.status(404).json({error:'no person with the specified id found'})
@@ -55,12 +54,15 @@ app.delete('/api/persons/:id',(request,response)=>{
           .catch(error=>console.log(error.message))
 })
 
-// app.get('/info',(request,response) =>{
-//     const message = `<div>Phonebook has info for ${persons.length} people</div>
-//                     <div>${new Date()}</div>`      
+app.put('/api/persons/:id',(request,response)=>{
+  const id=request.params.id
+  const body=request.body
+  console.log(body);
+  Person.findByIdAndUpdate(id, body, { new:true })
+        .then(updatedNote=>response.json(updatedNote))
+        .catch(error=>next(error))
 
-//     response.send(message)
-// })
+})
 
 //Unknown endpoint error middleware
 const unknownEndPoint = (request,response) =>{
