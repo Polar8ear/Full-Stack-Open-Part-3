@@ -20,11 +20,14 @@ app.get('/api/persons',(request,response) =>{
     Person.find({}).then(persons=>response.json(persons))
 })
 
-app.get('/api/persons/:id',(request,response) =>{
+app.get('/api/persons/:id',(request,response,next) =>{
     const id=request.params.id
     console.log(request.params);
-    Person.findById(id).then(person=>response.json(person))
-                       .catch(error=>response.status(404).end())
+    Person.findById(id).then(person=>{person
+                                      ?response.json(person)
+                                      :response.status(404).json({error:'no person with the specified id found'})
+                                      })
+                       .catch(error=>next(error))
 })
 
 app.post('/api/persons',(request,response) =>{
@@ -48,8 +51,8 @@ app.post('/api/persons',(request,response) =>{
 app.delete('/api/persons/:id',(request,response)=>{
   const id=request.params.id
     Person.findByIdAndRemove(id)
-          .then(result=>response.status(204).end())
-          .catch(error=>next(error))
+          .then(person=>response.status(404).end())
+          .catch(error=>console.log(error.message))
 })
 
 // app.get('/info',(request,response) =>{
@@ -58,6 +61,25 @@ app.delete('/api/persons/:id',(request,response)=>{
 
 //     response.send(message)
 // })
+
+//Unknown endpoint error middleware
+const unknownEndPoint = (request,response) =>{
+  response.status(404).send({error:'Unknown endpoint '})
+}
+
+app.use(unknownEndPoint)
+
+const errorHandler = (error,request,response,next) =>{
+  console.log(error.message)
+
+  if(error.name === 'CastError'){
+    return response.status(400).send({error:'malformed id'})
+  }
+
+  next(error)
+}
+
+app.use(errorHandler)
 
 const PORT= process.env.PORT
 app.listen(PORT,()=>{
