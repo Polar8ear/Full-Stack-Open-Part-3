@@ -20,6 +20,7 @@ app.get('/api/persons',(request,response) =>{
     Person.find({}).then(persons=>response.json(persons))
 })
 
+
 app.get('/api/persons/:id',(request,response,next) =>{
     const id=request.params.id
     Person.findById(id).then(person=>{person
@@ -28,6 +29,7 @@ app.get('/api/persons/:id',(request,response,next) =>{
                                       })
                        .catch(error=>next(error))
 })
+
 
 app.post('/api/persons',(request,response) =>{
   const body = request.body
@@ -38,6 +40,7 @@ app.post('/api/persons',(request,response) =>{
     })
   }
 
+
   const newPerson = new Person({
     name:body.name,
     number:body.number
@@ -47,21 +50,30 @@ app.post('/api/persons',(request,response) =>{
 })
 
 
-app.delete('/api/persons/:id',(request,response)=>{
-  const id=request.params.id
-    Person.findByIdAndRemove(id)
-          .then(person=>response.status(404).end())
-          .catch(error=>console.log(error.message))
-})
-
-app.put('/api/persons/:id',(request,response)=>{
+app.put('/api/persons/:id',(request,response,next)=>{
   const id=request.params.id
   const body=request.body
   console.log(body);
   Person.findByIdAndUpdate(id, body, { new:true })
-        .then(updatedNote=>response.json(updatedNote))
-        .catch(error=>next(error))
+  .then(updatedNote=>response.json(updatedNote))
+  .catch(error=>next(error))
+})
 
+
+app.delete('/api/persons/:id',(request,response,next)=>{
+  const id=request.params.id
+    Person.findByIdAndRemove(id)
+          .then(person=>response.status(404).end())
+          .catch(error=>next(error))
+})
+
+app.get('/info',(request,response,next) =>{
+  Person.countDocuments({}).then(total=>{
+                                  let message = `<div>Phonebook has info for ${total} people</div>`
+                                      message+= `<div>${new Date()}</div>`
+                                  response.send(message)
+                                })  
+                           .catch(error=>next(error))
 })
 
 //Unknown endpoint error middleware
@@ -71,6 +83,7 @@ const unknownEndPoint = (request,response) =>{
 
 app.use(unknownEndPoint)
 
+//Error handler middleware
 const errorHandler = (error,request,response,next) =>{
   console.log(error.message)
 
