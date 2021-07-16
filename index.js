@@ -48,8 +48,7 @@ app.post('/api/persons',(request,response,next) =>{
 app.put('/api/persons/:id',(request,response,next)=>{
   const id=request.params.id
   const body=request.body
-  console.log(body);
-  Person.findByIdAndUpdate(id, body, { new:true })
+  Person.findByIdAndUpdate(id, body, { new:true , runValidators:true })
         .then(updatedNote=>response.json(updatedNote))
         .catch(error=>next(error))
 })
@@ -58,7 +57,7 @@ app.put('/api/persons/:id',(request,response,next)=>{
 app.delete('/api/persons/:id',(request,response,next)=>{
   const id=request.params.id
     Person.findByIdAndRemove(id)
-          .then(person=>response.status(404).end())
+          .then(person=>response.status(204).end())
           .catch(error=>next(error))
 })
 
@@ -81,13 +80,17 @@ app.use(unknownEndPoint)
 
 //Error handler middleware
 const errorHandler = (error,request,response,next) =>{
-  console.log(error.message)
+  console.log(error.name,error.message)
 
   if(error.name === 'CastError'){
     return response.status(400).send({error:'malformed id'})
   }
 
   if(error.name === 'ValidationError'){
+    return response.status(400).send({error:error.message})
+  }
+
+  if(error.name === 'Validation failed'){
     return response.status(400).send({error:error.message})
   }
 
