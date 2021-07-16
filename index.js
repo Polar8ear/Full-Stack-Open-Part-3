@@ -64,7 +64,7 @@ app.delete('/api/persons/:id',(request,response,next)=>{
 app.get('/info',(request,response,next) =>{
   Person.countDocuments({})
         .then(total=>{
-                let message = `<div>Phonebook has info for ${total} people</div>`
+                let message = `<div>Phonebook has info for ${total} persons</div>`
                     message+= `<div>${new Date()}</div>`
                 response.send(message)
               })  
