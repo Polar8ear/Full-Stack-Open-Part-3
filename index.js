@@ -47,8 +47,8 @@ app.post('/api/persons',(request,response,next) => {
 
 app.put('/api/persons/:id',(request,response,next) => {
   const id=request.params.id
-  const body=request.body
-  Person.findByIdAndUpdate(id, body, { new:true , runValidators:true })
+  const updatedInfo={number:request.body.number}
+  Person.findByIdAndUpdate(id, updatedInfo, { new:true , runValidators:true })
     .then(updatedNote => response.json(updatedNote))
     .catch(error => next(error))
 })
